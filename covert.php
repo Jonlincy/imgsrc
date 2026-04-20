@@ -1,7 +1,10 @@
 <?php
 
 try{
-    $sourceFile = 'test.png';
+    $sourceFile = $argv[1] ?? '';
+    if (empty($sourceFile)){
+        die('命令为: php ./covert.php xxx.png');
+    }
     $cdnLink = convertToWebp($sourceFile);
     echo $cdnLink;
 }catch (\Exception $e){
@@ -30,6 +33,21 @@ function convertToWebp($filename, $quality = 85) {
     }
     imagewebp($image, $dst, $quality);
     imagedestroy($image);
+    $sourceSize = filesize($src);
+    $distSize = filesize($dst);
+    $rate = round((($sourceSize - $distSize) / $sourceSize) * 100 ,2);
+    echo '转换成功:' .$filename . '('.formatBytes($sourceSize).') -> '. $dstName . '('.formatBytes($distSize).'),压缩率约:'.$rate .'%' .PHP_EOL;
     unlink($src);
     return 'https://cdn.jsdelivr.net/gh/Jonlincy/imgsrc@main/' . $dstName;
+}
+
+function formatBytes($bytes, $precision = 2) {
+    $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    $bytes = max($bytes, 0);
+    $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+    $pow = min($pow, count($units) - 1);
+
+    $bytes /= pow(1024, $pow);
+
+    return round($bytes, $precision) . '' . $units[$pow];
 }
