@@ -38,7 +38,7 @@ function convertToWebp($filename, $quality = 85) {
     $rate = round((($sourceSize - $distSize) / $sourceSize) * 100 ,2);
     echo '转换成功:' .$filename . '('.formatBytes($sourceSize).') -> '. $dstName . '('.formatBytes($distSize).'),压缩率约:'.$rate .'%' .PHP_EOL;
     unlink($src);
-    return 'https://cdn.jsdelivr.net/gh/Jonlincy/imgsrc@main/' . $dstName;
+    return 'https://cdn.jsdelivr.net/gh/Jonlincy/imgsrc@main/' . str_replace('.\\','',$dstName);
 }
 
 function formatBytes($bytes, $precision = 2) {
