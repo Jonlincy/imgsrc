@@ -5,8 +5,17 @@ try{
     if (empty($sourceFile)){
         die('命令为: php ./covert.php xxx.png');
     }
-    $cdnLink = convertToWebp($sourceFile);
-    echo $cdnLink;
+
+   if ($sourceFile === 'png'){
+       $pngData = glob("*.png");
+       foreach ($pngData as $file) {
+           $cdnLink = convertToWebp($file);
+           echo $cdnLink . PHP_EOL;
+       }
+   }else{
+       $cdnLink = convertToWebp($sourceFile);
+       echo $cdnLink;
+   }
 }catch (\Exception $e){
     echo $e->getMessage();
 }
